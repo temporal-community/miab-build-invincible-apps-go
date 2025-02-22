@@ -9,17 +9,9 @@ import (
 	"strings"
 )
 
-type HTTPGetter interface {
-	Get(url string) (*http.Response, error)
-}
-
-type IPActivities struct {
-	HTTPClient HTTPGetter
-}
-
 // GetIP fetches the public IP address.
-func (i *IPActivities) GetIP(ctx context.Context) (string, error) {
-	resp, err := i.HTTPClient.Get("https://icanhazip.com")
+func GetIP(ctx context.Context) (string, error) {
+	resp, err := http.Get("https://icanhazip.com")
 	if err != nil {
 		return "", err
 	}
@@ -35,9 +27,9 @@ func (i *IPActivities) GetIP(ctx context.Context) (string, error) {
 }
 
 // GetLocationInfo uses the IP address to fetch location information.
-func (i *IPActivities) GetLocationInfo(ctx context.Context, ip string) (string, error) {
+func GetLocationInfo(ctx context.Context, ip string) (string, error) {
 	url := fmt.Sprintf("http://ip-api.com/json/%s", ip)
-	resp, err := i.HTTPClient.Get(url)
+	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
 	}

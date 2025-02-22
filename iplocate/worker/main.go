@@ -2,9 +2,8 @@ package main
 
 import (
 	"log"
-	"net/http"
 
-	"temporal-ip-geolocation/iplocate"
+	"miab-build-invincible-apps-go/iplocate"
 
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/worker"
@@ -21,14 +20,10 @@ func main() {
 	// Create the Temporal worker
 	w := worker.New(c, iplocate.TaskQueueName, worker.Options{})
 
-	// inject HTTP client into the Activities Struct
-	activities := &iplocate.IPActivities{
-		HTTPClient: http.DefaultClient,
-	}
-
 	// Register Workflow and Activities
 	w.RegisterWorkflow(iplocate.GetAddressFromIP)
-	w.RegisterActivity(activities)
+	w.RegisterActivity(iplocate.GetIP)
+	w.RegisterActivity(iplocate.GetLocationInfo)
 
 	// Start the Worker
 	err = w.Run(worker.InterruptCh())

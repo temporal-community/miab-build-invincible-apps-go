@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"temporal-ip-geolocation/iplocate"
+	"miab-build-invincible-apps-go/iplocate"
 
 	"github.com/google/uuid"
 	"go.temporal.io/sdk/client"

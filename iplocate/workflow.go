@@ -8,7 +8,7 @@ import (
 )
 
 // GetAddressFromIP is the Temporal Workflow that retrieves the IP address and location info.
-func GetAddressFromIP(ctx workflow.Context, name string, seconds int) (string, error) {
+func GetAddressFromIP(ctx workflow.Context, input WorkflowInput) (WorkflowOutput, error) {
 	// Define the activity options, including the retry policy
 	ao := workflow.ActivityOptions{
 		StartToCloseTimeout: time.Minute,
@@ -18,15 +18,16 @@ func GetAddressFromIP(ctx workflow.Context, name string, seconds int) (string, e
 	var ip string
 	err := workflow.ExecuteActivity(ctx, GetIP).Get(ctx, &ip)
 	if err != nil {
-		return "", fmt.Errorf("Failed to get IP: %s", err)
+		return WorkflowOutput{}, fmt.Errorf("Failed to get IP: %s", err)
 	}
 
-	workflow.Sleep(ctx, time.Second*time.Duration(seconds))
+	workflow.Sleep(ctx, time.Second*time.Duration(input.Seconds))
 
 	var location string
 	err = workflow.ExecuteActivity(ctx, GetLocationInfo, ip).Get(ctx, &location)
 	if err != nil {
-		return "", fmt.Errorf("Failed to get location: %s", err)
+		return WorkflowOutput{}, fmt.Errorf("Failed to get location: %s", err)
 	}
-	return fmt.Sprintf("Hello, %s. Your IP is %s and your location is %s", name, ip, location), nil
+	return WorkflowOutput{IPAddr: ip, Location: location}, nil
+	//return fmt.Sprintf("Hello, %s. Your IP is %s and your location is %s", name, ip, location), nil
 }

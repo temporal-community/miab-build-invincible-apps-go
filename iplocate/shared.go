@@ -1,5 +1,15 @@
 package iplocate
 
+type WorkflowInput struct {
+	Name    string
+	Seconds int
+}
+
+type WorkflowOutput struct {
+	IPAddr   string
+	Location string
+}
+
 const TaskQueueName = "ip-address-go"
 
 const DemoOptions = `

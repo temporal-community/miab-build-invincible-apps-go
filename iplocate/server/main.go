@@ -26,19 +26,19 @@ func initializeTemporal() error {
 }
 
 // Start the Temporal Workflow
-func startWorkflow(name string, seconds int) (string, error) {
+func startWorkflow(input iplocate.WorkflowInput) (iplocate.WorkflowOutput, error) {
 	workflowID := "getAddressFromIP-" + uuid.New().String()
 	options := client.StartWorkflowOptions{
 		ID:        workflowID,
 		TaskQueue: iplocate.TaskQueueName,
 	}
 
-	we, err := temporalClient.ExecuteWorkflow(context.Background(), options, iplocate.GetAddressFromIP, name, seconds)
+	we, err := temporalClient.ExecuteWorkflow(context.Background(), options, iplocate.GetAddressFromIP, input)
 	if err != nil {
-		return "", err
+		return iplocate.WorkflowOutput{}, err
 	}
 
-	var result string
+	var result iplocate.WorkflowOutput
 	err = we.Get(context.Background(), &result)
 	return result, err
 }
@@ -60,13 +60,15 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	result, err := startWorkflow(name, seconds)
+	input := iplocate.WorkflowInput{Name: name, Seconds: seconds}
+	result, err := startWorkflow(input)
 	if err != nil {
 		http.Error(w, "An error occurred: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Fprintf(w, "<p>%s</p>", result)
+	message := fmt.Sprintf("Hello %s. Your IP is %s and your location is %s", input.Name, result.IPAddr, result.Location)
+	fmt.Fprintf(w, "<p>%s</p>", message)
 }
 
 // Handle HTMX call for demo options

@@ -25,26 +25,14 @@ func initializeTemporal() error {
 	return err
 }
 
-// Start the Temporal Workflow
-func startWorkflow(input iplocate.WorkflowInput) (iplocate.WorkflowOutput, error) {
+// Handle HTMX form submission
+func handleSubmit(w http.ResponseWriter, r *http.Request) {
 	workflowID := "getAddressFromIP-" + uuid.New().String()
 	options := client.StartWorkflowOptions{
 		ID:        workflowID,
 		TaskQueue: iplocate.TaskQueueName,
 	}
 
-	we, err := temporalClient.ExecuteWorkflow(context.Background(), options, iplocate.GetAddressFromIP, input)
-	if err != nil {
-		return iplocate.WorkflowOutput{}, err
-	}
-
-	var result iplocate.WorkflowOutput
-	err = we.Get(context.Background(), &result)
-	return result, err
-}
-
-// Handle HTMX form submission
-func handleSubmit(w http.ResponseWriter, r *http.Request) {
 	name := r.FormValue("name")
 	sleepDuration := r.FormValue("sleep_duration")
 
@@ -61,7 +49,16 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	input := iplocate.WorkflowInput{Name: name, Seconds: seconds}
-	result, err := startWorkflow(input)
+
+	we, err := temporalClient.ExecuteWorkflow(context.Background(), options, iplocate.GetAddressFromIP, input)
+	if err != nil {
+		http.Error(w, "An error occurred: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	var result iplocate.WorkflowOutput
+	err = we.Get(context.Background(), &result)
+
 	if err != nil {
 		http.Error(w, "An error occurred: "+err.Error(), http.StatusInternalServerError)
 		return

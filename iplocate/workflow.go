@@ -21,7 +21,9 @@ func GetAddressFromIP(ctx workflow.Context, input WorkflowInput) (WorkflowOutput
 		return WorkflowOutput{}, fmt.Errorf("Failed to get IP: %s", err)
 	}
 
-	workflow.Sleep(ctx, time.Second*time.Duration(input.Seconds))
+	if input.Seconds > 0 {
+		workflow.Sleep(ctx, time.Second*time.Duration(input.Seconds))
+	}
 
 	var location string
 	err = workflow.ExecuteActivity(ctx, GetLocationInfo, ip).Get(ctx, &location)

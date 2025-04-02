@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distributed Hello World</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-primary': '#444CE7',
+                        'brand-background': '#141414',
+                        'brand-light': '#F8FAFC'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-brand-background min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold mb-6 text-brand-primary text-center">
+            Distributed Hello World
+        </h1>
+        <form 
+            id="greeting-form"
+            hx-post="/greet" 
+            hx-target="#result"
+            hx-indicator="#loading"
+            class="space-y-4"
+        >
+            <input 
+                type="text" 
+                name="name" 
+                placeholder="Enter your name" 
+                required 
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary"
+            >
+            
+            <div class="mt-2">
+                <button 
+                    type="button"
+                    hx-get="/demo-options"
+                    hx-target="#demo-options"
+                    hx-swap="innerHTML"
+                    hx-trigger="click"
+                    class="text-brand-primary hover:underline focus:outline-none"
+                    hx-indicator="#demo-options-loading"
+                >
+                    Show Demo Options
+                </button>
+            </div>
+
+            <div 
+                id="demo-options-loading"
+                class="htmx-indicator text-center text-brand-primary mt-2 hidden"
+            >
+                Loading...
+            </div>
+
+            <div 
+                id="demo-options"
+                class="transition-all duration-300 ease-in-out"
+            >
+                <!-- demo options will be dynamically loaded here -->
+            </div>
+
+            <div class="flex space-x-4">
+                <button 
+                    type="submit" 
+                    class="flex-1 bg-brand-primary text-white py-2 rounded-md hover:bg-opacity-90 transition-colors"
+                >
+                    Get Greeting
+                </button>
+                <button 
+                    type="button"
+                    onclick="resetForm()"
+                    class="flex-1 bg-gray-200 text-gray-800 py-2 rounded-md hover:bg-gray-300 transition-colors"
+                >
+                    Reset
+                </button>
+            </div>
+        </form>
+        
+        <div 
+            id="loading" 
+            class="htmx-indicator text-center text-brand-primary mt-4 hidden"
+        >
+            Loading...
+        </div>
+        
+        <div 
+            id="result" 
+            class="mt-6 text-center text-lg text-gray-800"
+        >
+            <!-- HTMX will populate this area -->
+        </div>
+    </div>
+
+    <script>
+        function resetForm() {
+            // Reset form fields
+            document.getElementById('greeting-form').reset();
+            
+            // Clear result
+            document.getElementById('result').innerHTML = '';
+            
+            // Hide demo options
+            const demoOptions = document.getElementById('demo-options');
+            demoOptions.innerHTML = '';
+        }
+    </script>
+</body>
+</html>

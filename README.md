@@ -302,7 +302,7 @@ If a Timer fires and a Worker is not available, it will pick up when a Worker be
 3. Press the **Show Demo Options** link on the page.
 4. In the **Sleep Duration (seconds)** section of the form, provide **10** in the **Number of Seconds** field and press the **Get Greeting** button.
 5. Go to the Temporal Web UI home page and see that there is a Workflow in the **Running** state.
-6. Immediately after, switch to the terminal with the Temporal Service running, and press `CTRL-C` (or `CMD-C` if on Mac) to kill the Worker process.
+6. Immediately after, switch to the terminal with the Temporal Service running, and press `CTRL-C` (or `CMD-C` if on Mac) to kill the Temporal Service.
     1. You want to be sure to kill the Service before the Timer fires. 
 7. Wait ~10 seconds and show the audience that the results haven't appeared on the screen.
 8. Go to the Web UI and show that it is refusing to connect.

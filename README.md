@@ -42,12 +42,12 @@ In order to present this material, you will need to install a development versio
 This demo is a quick, 1 - 2 minute teaser of Durable Execution. 
 It should _not_ be used to introduce any Temporal Concepts yet, that will come later in the presentation. 
 
-This demo will quickly demonstrate the difference between "volatile" and durable execution.
-Volatile execution is any execution that is not durable, so it is synonymous with the majority of code that is executed by most developers on a daily basis. 
+This demo will quickly demonstrate the difference between "" and durable execution.
+Normal execution is any execution that is not durable, so it is synonymous with the majority of code that is executed by most developers on a daily basis. 
 
 This demo will run a loop that counts from 1 to 10, sleeping for 1 second between each iteration, and logging the value to the screen.
 After the loop progresses a bit (about 4 or 5), the loop will be terminated.
-In a volatile execution, restarting this process will cause the loop to start over from the beginning, but in a durable process we'll see that the execution resumes where it was, continuing the execution.
+In a normal execution, restarting this process will cause the loop to start over from the beginning, but in a durable process we'll see that the execution resumes where it was, continuing the execution.
 
 ### Running the demo
 
@@ -66,15 +66,15 @@ You can either open three separate terminals, or use a terminal multiplex such a
     UI:      http://localhost:8080
     Metrics: http://localhost:65134/metrics
     ```
-2. In the second terminal, run the following commands to demo Volatile Execution.
+2. In the second terminal, run the following commands to demo Normal Execution.
 The Temporal Service you started will not be used in this portion.
-    1. Change directories into the `durable-vs-volatile-execution/volatile` directory:
+    1. Change directories into the `durable-vs-normal-execution/normal` directory:
         ```bash
-        cd durable-vs-volatile-execution/volatile
+        cd durable-vs-normal-execution/normal
         ```
-    2. Show the code to the audience, demonstrating it's a standard loop. Then run the Volatile Execution script
+    2. Show the code to the audience, demonstrating it's a standard loop. Then run the Normal Execution script
         ```bash
-        go run volatile/main.go
+        go run main.go
         ```
     3. The script should log the numbers 1 to 10 one at a time, sleeping for 1 second in between, similar to this:
         ```
@@ -96,9 +96,9 @@ The Temporal Service you started will not be used in this portion.
 
         No one will probably think this, as this is not typical behavior for any programming language.
    
-    5. Run the Volatile Execution script again
+    5. Run the Normal Execution script again
         ```bash
-        go run volatile/main.go
+        go run main.go
         ```
         Confirm that the code did, in fact, start over.
    
@@ -107,9 +107,9 @@ The Temporal Service you started will not be used in this portion.
    **Remember**, this is not the time to go deep into the architecture of Temporal.
 
    Mention that for this sample, there's a running process that executes the code and another script that invokes it. 
-    1. Change directories into the `durable-vs-volatile-execution/durable` directory:
+    1. Change directories into the `durable-vs-normal-execution/durable` directory:
         ```bash
-        cd durable-vs-volatile-execution/durable
+        cd durable-vs-normal-execution/durable
         ```
     2. Show the `workflow.go` and `activities.go` file to the audience. 
         Explain that it's a slight modification, but relatively similar.
@@ -131,8 +131,7 @@ The Temporal Service you started will not be used in this portion.
         This code will exit immediately. Return to the other terminal.
     6. In the previous terminal you should see the output of the loop. Once the loop gets to 4 or 5, CTRL-C the process and kill it. You will see extra output:
         ```
-        ^CWorker cancelled, shutting down
-        Beginning worker shutdown, will wait 0:00:00 before cancelling activities
+        ^CWorker has been stopped.
         ```
         For now you can ignore these.
     7. Ask the same question from the previous demo:

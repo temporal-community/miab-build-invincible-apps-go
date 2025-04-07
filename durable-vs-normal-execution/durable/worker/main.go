@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"miab-build-invincible-apps-go/durable-vs-volatile/durable"
+	"miab-build-invincible-apps-go/durable-vs-normal-execution/durable"
 
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/worker"

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"miab-build-invincible-apps-go/durable-vs-volatile/durable"
+	"miab-build-invincible-apps-go/durable-vs-normal-execution/durable"
 
 	"github.com/google/uuid"
 	"go.temporal.io/sdk/client"
